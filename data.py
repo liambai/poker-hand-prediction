@@ -39,7 +39,6 @@ c.execute('''CREATE TABLE Actions(
     player_ID varchar(256) not null, 
     round_k int not null, 
     pos_in_round int not null, 
-    player_chips varchar(256), 
     action_id varchar(256), 
     PRIMARY KEY(player_ID, game_ID, round_k, pos_in_round))''')
 
