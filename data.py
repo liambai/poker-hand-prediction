@@ -1,5 +1,7 @@
 import sqlite3
 
+# Import Kaggle and CPRG data here:
+
 conn = sqlite3.connect(<database file>)
 c = conn.cursor()
 
