@@ -25,22 +25,24 @@ c.execute('''CREATE TABLE Games(
     post_river_pot float)''')
 
 c.execute('''CREATE TABLE Hands(
-    game_ID varchar(256) FOREIGN KEY,
+    game_ID varchar(256) not null,
     player_ID varchar(256) not null,
     card_1 varchar(256),
     card_2 varchar(256),
     bets float,
-    net_gain float, 
+    net_gain float,
     chips_at_begining float,
-    PRIMARY KEY(player_ID, game_ID))''')
+    PRIMARY KEY(player_ID, game_ID),
+    FOREIGN KEY(game_ID) REFERENCES Games(game_ID) ON DELETE SET NULL)''')
 
 c.execute('''CREATE TABLE Actions(
-    game_ID varchar(256) FOREIGN KEY,
+    game_ID varchar(256) not null,
     player_ID varchar(256) not null,
     round_k int not null,
     pos_in_round int not null,
     action_id varchar(256),
-    PRIMARY KEY(player_ID, game_ID, round_k, pos_in_round))''')
+    PRIMARY KEY(player_ID, game_ID, round_k, pos_in_round),
+    FOREIGN KEY(game_ID) REFERENCES Games(game_ID) ON DELETE SET NULL)''')
 
 conn.commit()
 # Insert values into respective tables
