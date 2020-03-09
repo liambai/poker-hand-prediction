@@ -31,7 +31,7 @@ c.execute('''CREATE TABLE Hands(
     card_2 varchar(256), 
     bets float, 
     collects float, 
-    chips_at_begining float, 
+    chips_at_beginning float, 
     PRIMARY KEY(player_ID, game_ID))''')
 
 c.execute('''CREATE TABLE Actions(
