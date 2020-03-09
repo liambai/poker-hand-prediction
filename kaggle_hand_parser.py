@@ -78,11 +78,11 @@ def main():
     card_2 varchar(256), 
     bets float, 
     net_gain float, 
-    chips_at_begining float, 
+    chips_at_beginning float, 
     PRIMARY KEY(player_ID, game_ID))''')
 
-    for gid, pid, c1, c2, b, ng, cs in zip(player_IDs, game_IDs, card_1, card_2, bets, net_gain, chip_stack):
-        c.execute('''INSERT INTO Hands VALUES (?, ?, ?, ?, ?, ?, ?)''', (gid, pid, c1, c2, b, ng, cs))
+    for pid, gid, c1, c2, b, ng, cs in zip(game_IDs, player_IDs, card_1, card_2, bets, net_gain, chip_stack):
+        c.execute('''INSERT INTO Hands VALUES (?, ?, ?, ?, ?, ?, ?)''', (pid, gid, c1, c2, b, ng, cs))
 
     conn.commit()
 
