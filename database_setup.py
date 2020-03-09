@@ -12,34 +12,34 @@ c.execute('DROP TABLE IF EXISTS "Actions";')
 
 # Create tables in the database and add data to it.
 c.execute('''CREATE TABLE Games(
-    game_ID varchar(256) PRIMARY KEY, 
-    big_blind float, 
-    card1 varchar(256), 
-    card2 varchar(256), 
-    card3 varchar(256), 
-    card4 varchar(256), 
-    card5 varchar(256), 
-    pre_flop_pot float, 
-    post_flop_pot float, 
-    post_turn_pot float, 
-    post_river_pot float)''')
+    game_ID VARCHAR(256) PRIMARY KEY, 
+    big_blind FLOAT, 
+    card1 CHAR(2), 
+    card2 CHAR(2), 
+    card3 CHAR(2), 
+    card4 CHAR(2), 
+    card5 CHAR(2), 
+    pre_flop_pot FLOAT, 
+    post_flop_pot FLOAT, 
+    post_turn_pot FLOAT, 
+    post_river_pot FLOAT)''')
 
 c.execute('''CREATE TABLE Hands(
-    game_ID varchar(256) not null, 
-    player_ID varchar(256) not null, 
-    card_1 varchar(256), 
-    card_2 varchar(256), 
-    bets float, 
-    collects float, 
-    chips_at_begining float, 
+    game_ID VARCHAR(256) NOT NULL, 
+    player_ID VARCHAR(256) NOT NULL, 
+    card1 CHAR(2), 
+    card2 CHAR(2), 
+    bets FLOAT, 
+    collects FLOAT, 
+    chips_at_beginning FLOAT, 
     PRIMARY KEY(player_ID, game_ID))''')
 
 c.execute('''CREATE TABLE Actions(
-    game_ID varchar(256) not null, 
-    player_ID varchar(256) not null, 
-    round_k int not null, 
-    pos_in_round int not null, 
-    action_id varchar(256), 
+    game_ID VARCHAR(256) NOT NULL, 
+    player_ID VARCHAR(256) NOT NULL, 
+    round_k TINYINT NOT NULL, 
+    pos_in_round TINYINT NOT NULL, 
+    action_id CHAR(1), 
     PRIMARY KEY(player_ID, game_ID, round_k, pos_in_round))''')
 
 conn.commit()
