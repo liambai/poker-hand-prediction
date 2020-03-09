@@ -10,7 +10,7 @@ c.execute('DROP TABLE IF EXISTS "Games";')
 c.execute('DROP TABLE IF EXISTS "Hands";')
 c.execute('DROP TABLE IF EXISTS "Actions";')
 
-# Create tables in the database and add data to it.
+# Create tables in the database
 c.execute('''CREATE TABLE Games(
     game_ID varchar(256) PRIMARY KEY, 
     big_blind float, 
@@ -44,7 +44,7 @@ c.execute('''CREATE TABLE Actions(
 
 conn.commit()
 
-# Insert values into respective tables
+# Insert data values into respective tables
     # c.execute('''INSERT INTO Games VALUES (?, ?, ?, ?, ?, ?)''', (<Add stuff in here>))
     # c.execute('''INSERT INTO Hands VALUES (?, ?, ?, ?, ?, ?, ?)''', (<Add stuff in here>))
     # c.execute('''INSERT INTO Actions VALUES (?, ?, ?, ?, ?, ?)''', (<Add stuff in here>))
