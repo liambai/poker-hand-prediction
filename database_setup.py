@@ -30,7 +30,7 @@ c.execute('''CREATE TABLE Hands(
     card1 CHAR(2), 
     card2 CHAR(2), 
     bets FLOAT, 
-    collects FLOAT, 
+    net_gain FLOAT, 
     chips_at_beginning FLOAT, 
     PRIMARY KEY(player_ID, game_ID))''')
 
@@ -43,8 +43,3 @@ c.execute('''CREATE TABLE Actions(
     PRIMARY KEY(player_ID, game_ID, round_k, pos_in_round))''')
 
 conn.commit()
-# Insert values into respective tables
-    # c.execute('''INSERT INTO Games VALUES (?, ?, ?, ?, ?, ?)''', (<Add stuff in here>))
-    # c.execute('''INSERT INTO Hands VALUES (?, ?, ?, ?, ?, ?, ?)''', (<Add stuff in here>))
-    # c.execute('''INSERT INTO Actions VALUES (?, ?, ?, ?, ?, ?)''', (<Add stuff in here>))
-    # conn.commit()
