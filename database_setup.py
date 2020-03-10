@@ -30,7 +30,7 @@ c.execute('''CREATE TABLE Hands(
     card1 CHAR(2), 
     card2 CHAR(2), 
     bets FLOAT, 
-    collects FLOAT, 
+    net_gain FLOAT, 
     chips_at_beginning FLOAT, 
     PRIMARY KEY(player_ID, game_ID))''')
 
