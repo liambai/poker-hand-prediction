@@ -29,7 +29,7 @@ for file in files:
                         cards[i - 8] = fields[i]
                 for i in range(4, 8):
                     fields[i] = fields[i].split('/')[1]
-                game = (fields[0], 20, cards[0], cards[1], cards[2], cards[3], cards[4], float(fields[4]), float(fields[5]), float(fields[6]), float(fields[7]))
+                game = (fields[0] + 'i', 20, cards[0], cards[1], cards[2], cards[3], cards[4], float(fields[4]), float(fields[5]), float(fields[6]), float(fields[7]))
                 c.execute('''INSERT INTO Games VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''', game)
                 # print(game)
 
@@ -45,7 +45,7 @@ for file in files:
                     cards = [None] * 2
                     if len(fields) > 11:
                         cards = fields[11:]
-                    hand = (fields[1], player_id, cards[0], cards[1], float(fields[9]), float(fields[10]) - float(fields[9]), float(fields[8]))
+                    hand = (fields[1] + 'i', player_id, cards[0], cards[1], float(fields[9]), float(fields[10]) - float(fields[9]), float(fields[8]))
                     c.execute('''INSERT INTO Hands VALUES (?, ?, ?, ?, ?, ?, ?)''', hand)
                     # print(hand)
                     for i in range(4, 8):
@@ -53,7 +53,7 @@ for file in files:
                         if action_field == '-':
                             continue
                         for j in range(len(action_field)):
-                            action = (fields[1], player_id, i - 4, j * 10 + int(fields[3]), action_field[j:j + 1])
+                            action = (fields[1] + 'i', player_id, i - 4, j * 10 + int(fields[3]), action_field[j:j + 1])
                             c.execute('''INSERT INTO Actions VALUES (?, ?, ?, ?, ?)''', action)
                         # print(action)
             print('Saving to database...')

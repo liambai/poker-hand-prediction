@@ -5,7 +5,7 @@ c = conn.cursor()
 def main():
     # files 1, 2, 3, 7, 8, 9 work
     # file 4, 5, 6 are kinda faulty
-    lines = open("kaggle-data/kaggle_file2.txt" ,"r").readlines()
+    lines = open("kaggle-data/kaggle_file1.txt" ,"r").readlines()
     games = []
     for line in lines:
         words = line.split(' ')
@@ -36,9 +36,9 @@ def main():
                 cards_info = words[1:]
                 for i in range(len(cards_info)):
                     cards[i] = cards_info[i].strip("[]")
-        
+
         c.execute('''INSERT INTO Games VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''', \
-                (game_id, big_blind, cards[0], cards[1], cards[2], cards[3], cards[4], None, None, None, None))
+                (game_id + 'k', big_blind, cards[0], cards[1], cards[2], cards[3], cards[4], None, None, None, None))
 
     # parse hand information and insert into Hands table
         game_length = len(game)
@@ -94,30 +94,30 @@ def main():
                 if action_word == 'folds':
                     pos_in_round += 1
                     c.execute('''INSERT INTO Actions VALUES (?, ?, ?, ?, ?)''', \
-                (game_id, player_id, round_k, pos_in_round, 'f'))
+                (game_id + 'k', player_id, round_k, pos_in_round, 'f'))
                 if action_word == 'calls':
                     pos_in_round += 1
                     c.execute('''INSERT INTO Actions VALUES (?, ?, ?, ?, ?)''', \
-                (game_id, player_id, round_k, pos_in_round, 'c'))
+                (game_id + 'k', player_id, round_k, pos_in_round, 'c'))
                 if action_word == 'raises':
                     pos_in_round += 1
                     c.execute('''INSERT INTO Actions VALUES (?, ?, ?, ?, ?)''', \
-                (game_id, player_id, round_k, pos_in_round, 'r'))
+                (game_id + 'k', player_id, round_k, pos_in_round, 'r'))
                 if action_word == 'checks':
                     pos_in_round += 1
                     c.execute('''INSERT INTO Actions VALUES (?, ?, ?, ?, ?)''', \
-                (game_id, player_id, round_k, pos_in_round, 'k'))
+                (game_id + 'k', player_id, round_k, pos_in_round, 'k'))
                 if action_word == 'bets':
                     pos_in_round += 1
                     c.execute('''INSERT INTO Actions VALUES (?, ?, ?, ?, ?)''', \
-                (game_id, player_id, round_k, pos_in_round, 'b'))
+                (game_id + 'k', player_id, round_k, pos_in_round, 'b'))
                 if action_word == 'allin':
                     pos_in_round += 1
                     c.execute('''INSERT INTO Actions VALUES (?, ?, ?, ?, ?)''', \
-                (game_id, player_id, round_k, pos_in_round, 'A'))
+                (game_id + 'k', player_id, round_k, pos_in_round, 'A'))
 
     for pid, gid, c1, c2, b, ng, cs in zip(player_IDs, game_IDs, card_1, card_2, bets, net_gain, chip_stack):
-        c.execute('''INSERT INTO Hands VALUES (?, ?, ?, ?, ?, ?, ?)''', (pid, gid, c1, c2, b, ng, cs))
+        c.execute('''INSERT INTO Hands VALUES (?, ?, ?, ?, ?, ?, ?)''', (pid, gid + 'k', c1, c2, b, ng, cs))
 
     conn.commit()
 if __name__ == '__main__':
