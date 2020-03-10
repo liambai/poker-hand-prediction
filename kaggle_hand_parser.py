@@ -63,24 +63,6 @@ def main():
                             collect = float(summary_words[collects_index].strip('.'))
                             net_gain.append(collect - bet)
 
-    # Create connection to database
-    conn = sqlite3.connect('poker.db')
-    c = conn.cursor()
-
-    # Delete table if exists
-    c.execute('DROP TABLE IF EXISTS "Hands";')
-
-    # Create table in the database
-    c.execute('''CREATE TABLE Hands(
-    game_ID varchar(256) not null, 
-    player_ID varchar(256) not null, 
-    card_1 varchar(256), 
-    card_2 varchar(256), 
-    bets float, 
-    net_gain float, 
-    chips_at_beginning float, 
-    PRIMARY KEY(player_ID, game_ID))''')
-
     for pid, gid, c1, c2, b, ng, cs in zip(game_IDs, player_IDs, card_1, card_2, bets, net_gain, chip_stack):
         c.execute('''INSERT INTO Hands VALUES (?, ?, ?, ?, ?, ?, ?)''', (pid, gid, c1, c2, b, ng, cs))
 
