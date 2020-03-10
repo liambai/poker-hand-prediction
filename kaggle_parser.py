@@ -116,7 +116,7 @@ def main():
                     c.execute('''INSERT INTO Actions VALUES (?, ?, ?, ?, ?)''', \
                 (game_id, player_id, round_k, pos_in_round, 'A'))
 
-    for pid, gid, c1, c2, b, ng, cs in zip(game_IDs, player_IDs, card_1, card_2, bets, net_gain, chip_stack):
+    for pid, gid, c1, c2, b, ng, cs in zip(player_IDs, game_IDs, card_1, card_2, bets, net_gain, chip_stack):
         c.execute('''INSERT INTO Hands VALUES (?, ?, ?, ?, ?, ?, ?)''', (pid, gid, c1, c2, b, ng, cs))
 
     conn.commit()
