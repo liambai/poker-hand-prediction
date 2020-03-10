@@ -43,8 +43,3 @@ c.execute('''CREATE TABLE Actions(
     PRIMARY KEY(player_ID, game_ID, round_k, pos_in_round))''')
 
 conn.commit()
-# Insert values into respective tables
-    # c.execute('''INSERT INTO Games VALUES (?, ?, ?, ?, ?, ?)''', (<Add stuff in here>))
-    # c.execute('''INSERT INTO Hands VALUES (?, ?, ?, ?, ?, ?, ?)''', (<Add stuff in here>))
-    # c.execute('''INSERT INTO Actions VALUES (?, ?, ?, ?, ?, ?)''', (<Add stuff in here>))
-    # conn.commit()
