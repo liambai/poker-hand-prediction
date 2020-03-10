@@ -5,14 +5,15 @@ c = conn.cursor()
 def main():
     # files 1, 2, 3, 7, 8, 9 work
     # file 4, 5, 6 are kinda faulty
-    lines = open("kaggle-data/kaggle_file1.txt" ,"r").readlines()
-    games = [[]]
+    lines = open("kaggle-data/kaggle_file2.txt" ,"r").readlines()
+    games = []
     for line in lines:
-        if line == '\n':
+        words = line.split(' ')
+        if words[0] == "Game" and words[1] == "started":
             games.append([])
-        else:
+        if len(words) > 0:
             games[-1].append(line)
-    
+
     # data information for Hands table
     player_IDs = []
     game_IDs = []
