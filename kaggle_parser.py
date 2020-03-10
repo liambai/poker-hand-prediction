@@ -3,12 +3,24 @@ conn = sqlite3.connect('poker.db')
 c = conn.cursor()
 
 def main():
-    lines = open("kaggle-data/kaggle_file2.txt" ,"r").readlines()
+    # files 1, 2, 3, 7, 8, 9 work
+    # file 4, 5, 6 are kinda faulty
+    lines = open("kaggle-data/kaggle_file1.txt" ,"r").readlines()
     games = [[]]
     for line in lines:
-        games[-1].append(line)
         if line == '\n':
             games.append([])
+        else:
+            games[-1].append(line)
+    
+    # data information for Hands table
+    player_IDs = []
+    game_IDs = []
+    card_1 = []
+    card_2 = []
+    bets = []
+    net_gain = []
+    chip_stack = []
 
     # parse game information and insert into Games table
     for game in games:
@@ -18,25 +30,16 @@ def main():
         cards = [None]*5
         for line in game:
             words = line.split(" ")
-            #get info about the 5 cards on the board
+            # get info about the 5 cards on the board
             if words[0] == "Board:":
                 cards_info = words[1:]
                 for i in range(len(cards_info)):
                     cards[i] = cards_info[i].strip("[]")
         
         c.execute('''INSERT INTO Games VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''', \
-                (game_id, big_blind, cards[0], cards[1], cards[2], \
-                cards[3], cards[4], None, None, None, None))
+                (game_id, big_blind, cards[0], cards[1], cards[2], cards[3], cards[4], None, None, None, None))
 
     # parse hand information and insert into Hands table
-    player_IDs = []
-    game_IDs = []
-    card_1 = []
-    card_2 = []
-    bets = []
-    net_gain = []
-    chip_stack = []
-    for game in games:
         game_length = len(game)
         for line in game:
             words = line.split(' ')
@@ -46,8 +49,7 @@ def main():
                 # get info on game_id
                 game_IDs.append(game[1].split(' ')[2])
                 # get info on chip stack
-                chip_stack.append(float(words[-1].strip('().\n')))
-            # iterate through summary
+                chip_stack.append(float(words[-1].strip('().\r\n')))
             if line == '------ Summary ------\n':
                 summary_index = game.index(line)
                 for i in range(summary_index, game_length):
@@ -63,7 +65,6 @@ def main():
                                 if word.endswith('].'):
                                     card_2.append(word.strip('].'))
                         else:
-                            # otherwise there was no show
                             card_1.append(None)
                             card_2.append(None)
                     for j in range(summary_line_length):
@@ -77,10 +78,7 @@ def main():
                             collect = float(summary_words[collects_index].strip('.'))
                             net_gain.append(collect - bet)
 
-    for pid, gid, c1, c2, b, ng, cs in zip(game_IDs, player_IDs, card_1, card_2, bets, net_gain, chip_stack):
-        c.execute('''INSERT INTO Hands VALUES (?, ?, ?, ?, ?, ?, ?)''', (pid, gid, c1, c2, b, ng, cs))
-
-    for game in games:
+    # parse hand information and insert into Actions table
         game_id = game[1].split(' ')[2]
         round_k = 0 #0 pre-flop, 1 post-flop, 2 post-turn, 3 post-river
         pos_in_round = 0 #0 for first action in round, counting up
@@ -116,6 +114,9 @@ def main():
                     pos_in_round += 1
                     c.execute('''INSERT INTO Actions VALUES (?, ?, ?, ?, ?)''', \
                 (game_id, player_id, round_k, pos_in_round, 'A'))
+
+    for pid, gid, c1, c2, b, ng, cs in zip(game_IDs, player_IDs, card_1, card_2, bets, net_gain, chip_stack):
+        c.execute('''INSERT INTO Hands VALUES (?, ?, ?, ?, ?, ?, ?)''', (pid, gid, c1, c2, b, ng, cs))
 
     conn.commit()
 if __name__ == '__main__':
