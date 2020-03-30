@@ -13,6 +13,7 @@ c.execute('DROP TABLE IF EXISTS "Actions";')
 # Create tables in the database and add data to it.
 c.execute('''CREATE TABLE Games(
     game_ID VARCHAR(256) PRIMARY KEY, 
+    data_source CHAR(1),
     big_blind FLOAT, 
     card1 CHAR(2), 
     card2 CHAR(2), 
