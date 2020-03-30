@@ -3,9 +3,7 @@ conn = sqlite3.connect('poker.db')
 c = conn.cursor()
 
 def main():
-    # files 1, 2, 3, 7, 8, 9 work
-    # file 4, 5, 6 are kinda faulty
-    lines = open("kaggle-data/kaggle_file1.txt" ,"r").readlines()
+    lines = open("kaggle-data/kaggle_file4.txt" ,"r").readlines()
     games = []
     for line in lines:
         words = line.split(' ')
@@ -24,8 +22,27 @@ def main():
     chip_stack = []
 
     # parse game information and insert into Games table
+    game_ids = set() #set used to exclude duplicate game_ids
     for game in games:
-        game_id = game[1].split(' ')[2]
+        #create game_id using timestamp
+        first_line_words = game[0].split(' ')
+        date = first_line_words[3]
+        date_vals = date.split('/')
+        time = first_line_words[4]
+        time_vals = time.split(':')
+        
+        #enforce consistent formatting (2016/9/26 -> 20160926)
+        for i in range(3):
+            if len(date_vals[i]) == 1:
+                date_vals[i] = '0' + date_vals[i]
+            if len(time_vals[i]) == 1:
+                time_vals[i] = '0' + time_vals[i]
+        game_id = ''.join(date_vals) + ''.join(time_vals)
+        if game_id not in game_ids:
+            game_ids.add(game_id)
+        else:
+            continue
+        
         stakes = game[1].split(' ')[3]
         big_blind = stakes.split("/")[1]
         cards = [None]*5
@@ -36,9 +53,11 @@ def main():
                 cards_info = words[1:]
                 for i in range(len(cards_info)):
                     cards[i] = cards_info[i].strip("[]")
+                    
+        
 
-        c.execute('''INSERT INTO Games VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''', \
-                (game_id + 'k', big_blind, cards[0], cards[1], cards[2], cards[3], cards[4], None, None, None, None))
+        c.execute('''INSERT INTO Games VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''', \
+                (game_id, 'k', big_blind, cards[0], cards[1], cards[2], cards[3], cards[4], None, None, None, None))
 
     # parse hand information and insert into Hands table
         game_length = len(game)
