@@ -3,7 +3,7 @@
     <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>STENCIL</title>
+    <title>All-in</title>
 </head>
 
 <body>
@@ -12,7 +12,7 @@
     <div class="col-md-2"></div>
     <div class="col-md-8">
         <div class="page-header center">
-            <h1>All-in<<< Data Deliverable >>></h1>
+            <h1>All-in Data Deliverable</h1>
         </div>
         <h1> Tech Report</h1>
         <p>
@@ -52,12 +52,12 @@
                     </ul>
                 <li>How is the data distributed? Is it uniform or skewed? Are there outliers? What are the min/max values? (focus on the fields that are most relevant to your project goals)<br />
                     <ul style="padding-left:40px">
-                        <img src="card_dist.png" alt="Card Distribution" style="width:384px;height:384px;">
+                        <img src="card_dist.png" alt="Card Distribution" style="width:600px;height:600px;">
                         <li>The data is skewed because of the fact that we only have data on hands that were revealed at the end of the game. Players with bad hands tend to fold before the showdown, so as you can see, there are more aces in our dataset, followed by kings, all the way down to twos, which have the smallest representation.
                         </li>
                     </ul>
                     <ul style="padding-left:40px">
-                        <img src="net_gain.png" alt="Card Distribution" style="width:384px;height:384px;">
+                        <img src="net_gain.png" alt="Net Gain Distribution" style="width:600px;height:600px;">
                         <li>Another field we looked at was net_gain. As you can see in the log scale histogram above, the most common net_gain was zero (the player folds early in the game), and the frequency of net_gains more steeply decreases on the negative side than the positive side. This makes sense because players are more likely to try to minimize loss per hand (but possibly losing a little bit each hand for several hands) and then win big on a few hands.</li>
                     </ul>
                 </li>
@@ -74,7 +74,7 @@
         <li>Summarize any challenges or observations you have made since collecting your data. Then, discuss your next steps and how your data collection has impacted the type of analysis you will perform. (approximately 3-5 sentences)
             <ul style="padding-left:20px">
                 <li>One important observation as we collected data is how little information we have regarding each player’s hand. We only know the hands that made it to the end of the game and infrequently the ones that the players voluntarily showed. This will affect the type of hypothesis testing we conduct. We are, however, overall happy with the quantity and quality of the data we collected.</li>
-            </ul> 
+            </ul>
         </li>
     </div>
 </div>
