@@ -27,6 +27,7 @@ c.execute('''CREATE TABLE Games(
 
 c.execute('''CREATE TABLE Hands(
     game_ID VARCHAR(256) NOT NULL, 
+    data_source CHAR(1),
     player_ID VARCHAR(256) NOT NULL, 
     card1 CHAR(2), 
     card2 CHAR(2), 
@@ -37,6 +38,7 @@ c.execute('''CREATE TABLE Hands(
 
 c.execute('''CREATE TABLE Actions(
     game_ID VARCHAR(256) NOT NULL, 
+    data_source CHAR(1),
     player_ID VARCHAR(256) NOT NULL, 
     round_k TINYINT NOT NULL, 
     pos_in_round TINYINT NOT NULL, 
