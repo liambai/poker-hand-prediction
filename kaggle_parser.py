@@ -8,7 +8,7 @@ game_ids = set() #set used to exclude duplicate game_ids
 def createGameID(game):
     conflict = False
     first_line_words = game[0].split(' ')
-    date = first_line_words[3]
+    date = first_line_words[3].strip('/n')
     date_vals = date.split('/')
     time = first_line_words[4]
     time_vals = time.split(':')
@@ -26,8 +26,8 @@ def createGameID(game):
         conflict = True
     return game_id, conflict
 
-def main():
-    lines = open("kaggle-data/kaggle_file1.txt" ,"r").readlines()
+def parse_games(filename):
+    lines = open(filename ,"r").readlines()
     games = []
     for line in lines:
         words = line.split(' ')
@@ -143,5 +143,11 @@ def main():
         c.execute('''INSERT INTO Hands VALUES (?, ?, ?, ?, ?, ?, ?, ?)''', (gid, 'k' ,pid, c1, c2, b, ng, cs))
 
     conn.commit()
+
+def main():
+    for file_id in range(1, 10):
+        filename = "kaggle-data/kaggle_file" + str(file_id) + ".txt"
+        parse_games(filename)
+    
 if __name__ == '__main__':
     main()
