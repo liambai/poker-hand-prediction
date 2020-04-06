@@ -2,8 +2,32 @@ import sqlite3
 conn = sqlite3.connect('poker.db')
 c = conn.cursor()
 
+game_ids = set() #set used to exclude duplicate game_ids
+
+#create game_id using timestamp
+def createGameID(game):
+    conflict = False
+    first_line_words = game[0].split(' ')
+    date = first_line_words[3]
+    date_vals = date.split('/')
+    time = first_line_words[4]
+    time_vals = time.split(':')
+    
+    #enforce consistent formatting (2016/9/26 -> 20160926)
+    for i in range(3):
+        if len(date_vals[i]) == 1:
+            date_vals[i] = '0' + date_vals[i]
+        if len(time_vals[i]) == 1:
+            time_vals[i] = '0' + time_vals[i]
+    game_id = ''.join(date_vals) + ''.join(time_vals)
+    if game_id not in game_ids:
+        game_ids.add(game_id)
+    else:
+        conflict = True
+    return game_id, conflict
+
 def main():
-    lines = open("kaggle-data/kaggle_file4.txt" ,"r").readlines()
+    lines = open("kaggle-data/kaggle_file1.txt" ,"r").readlines()
     games = []
     for line in lines:
         words = line.split(' ')
@@ -22,27 +46,10 @@ def main():
     chip_stack = []
 
     # parse game information and insert into Games table
-    game_ids = set() #set used to exclude duplicate game_ids
     for game in games:
-        #create game_id using timestamp
-        first_line_words = game[0].split(' ')
-        date = first_line_words[3]
-        date_vals = date.split('/')
-        time = first_line_words[4]
-        time_vals = time.split(':')
-        
-        #enforce consistent formatting (2016/9/26 -> 20160926)
-        for i in range(3):
-            if len(date_vals[i]) == 1:
-                date_vals[i] = '0' + date_vals[i]
-            if len(time_vals[i]) == 1:
-                time_vals[i] = '0' + time_vals[i]
-        game_id = ''.join(date_vals) + ''.join(time_vals)
-        if game_id not in game_ids:
-            game_ids.add(game_id)
-        else:
+        game_id, conflict = createGameID(game)
+        if conflict:
             continue
-        
         stakes = game[1].split(' ')[3]
         big_blind = stakes.split("/")[1]
         cards = [None]*5
@@ -53,8 +60,6 @@ def main():
                 cards_info = words[1:]
                 for i in range(len(cards_info)):
                     cards[i] = cards_info[i].strip("[]")
-                    
-        
 
         c.execute('''INSERT INTO Games VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''', \
                 (game_id, 'k', big_blind, cards[0], cards[1], cards[2], cards[3], cards[4], None, None, None, None))
@@ -64,10 +69,10 @@ def main():
         for line in game:
             words = line.split(' ')
             if words[0] == 'Seat' and len(words[1]) == 2:
+                # get info on game_id
+                game_IDs.append(game_id)
                 # get info on player_id
                 player_IDs.append(' '.join(words[2:-1]))
-                # get info on game_id
-                game_IDs.append(game[1].split(' ')[2])
                 # get info on chip stack
                 chip_stack.append(float(words[-1].strip('().\r\n')))
             if line == '------ Summary ------\n':
@@ -99,7 +104,6 @@ def main():
                             net_gain.append(collect - bet)
 
     # parse hand information and insert into Actions table
-        game_id = game[1].split(' ')[2]
         round_k = 0 #0 pre-flop, 1 post-flop, 2 post-turn, 3 post-river
         pos_in_round = 0 #0 for first action in round, counting up
         for line in game:
@@ -112,31 +116,31 @@ def main():
                 action_word = words[2].strip("\n ")
                 if action_word == 'folds':
                     pos_in_round += 1
-                    c.execute('''INSERT INTO Actions VALUES (?, ?, ?, ?, ?)''', \
-                (game_id + 'k', player_id, round_k, pos_in_round, 'f'))
+                    c.execute('''INSERT INTO Actions VALUES (?, ?, ?, ?, ?, ?)''', \
+                (game_id, 'k', player_id, round_k, pos_in_round, 'f'))
                 if action_word == 'calls':
                     pos_in_round += 1
-                    c.execute('''INSERT INTO Actions VALUES (?, ?, ?, ?, ?)''', \
-                (game_id + 'k', player_id, round_k, pos_in_round, 'c'))
+                    c.execute('''INSERT INTO Actions VALUES (?, ?, ?, ?, ?, ?)''', \
+                (game_id, 'k', player_id, round_k, pos_in_round, 'c'))
                 if action_word == 'raises':
                     pos_in_round += 1
-                    c.execute('''INSERT INTO Actions VALUES (?, ?, ?, ?, ?)''', \
-                (game_id + 'k', player_id, round_k, pos_in_round, 'r'))
+                    c.execute('''INSERT INTO Actions VALUES (?, ?, ?, ?, ?, ?)''', \
+                (game_id, 'k', player_id, round_k, pos_in_round, 'r'))
                 if action_word == 'checks':
                     pos_in_round += 1
-                    c.execute('''INSERT INTO Actions VALUES (?, ?, ?, ?, ?)''', \
-                (game_id + 'k', player_id, round_k, pos_in_round, 'k'))
+                    c.execute('''INSERT INTO Actions VALUES (?, ?, ?, ?, ?, ?)''', \
+                (game_id, 'k', player_id, round_k, pos_in_round, 'k'))
                 if action_word == 'bets':
                     pos_in_round += 1
-                    c.execute('''INSERT INTO Actions VALUES (?, ?, ?, ?, ?)''', \
-                (game_id + 'k', player_id, round_k, pos_in_round, 'b'))
+                    c.execute('''INSERT INTO Actions VALUES (?, ?, ?, ?, ?, ?)''', \
+                (game_id, 'k', player_id, round_k, pos_in_round, 'b'))
                 if action_word == 'allin':
                     pos_in_round += 1
-                    c.execute('''INSERT INTO Actions VALUES (?, ?, ?, ?, ?)''', \
-                (game_id + 'k', player_id, round_k, pos_in_round, 'A'))
+                    c.execute('''INSERT INTO Actions VALUES (?, ?, ?, ?, ?, ?)''', \
+                (game_id, 'k', player_id, round_k, pos_in_round, 'A'))
 
     for pid, gid, c1, c2, b, ng, cs in zip(player_IDs, game_IDs, card_1, card_2, bets, net_gain, chip_stack):
-        c.execute('''INSERT INTO Hands VALUES (?, ?, ?, ?, ?, ?, ?)''', (pid, gid + 'k', c1, c2, b, ng, cs))
+        c.execute('''INSERT INTO Hands VALUES (?, ?, ?, ?, ?, ?, ?, ?)''', (gid, 'k' ,pid, c1, c2, b, ng, cs))
 
     conn.commit()
 if __name__ == '__main__':
