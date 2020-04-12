@@ -8,9 +8,9 @@ game_ids = set() #set used to exclude duplicate game_ids
 def createGameID(game):
     conflict = False
     first_line_words = game[0].split(' ')
-    date = first_line_words[3].strip('/n')
+    date = first_line_words[3].strip('\n')
     date_vals = date.split('/')
-    time = first_line_words[4]
+    time = first_line_words[4].strip('\n')
     time_vals = time.split(':')
     
     #enforce consistent formatting (2016/9/26 -> 20160926)
@@ -59,7 +59,7 @@ def parse_games(filename):
             if words[0] == "Board:":
                 cards_info = words[1:]
                 for i in range(len(cards_info)):
-                    cards[i] = cards_info[i].strip("[]")
+                    cards[i] = cards_info[i].strip("[]\n")
 
         c.execute('''INSERT INTO Games VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''', \
                 (game_id, 'k', big_blind, cards[0], cards[1], cards[2], cards[3], cards[4], None, None, None, None))
