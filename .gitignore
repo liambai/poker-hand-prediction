@@ -1,3 +1,5 @@
 *.db
 *.db-journal
 IRCdata/*
+
+.DS_Store
